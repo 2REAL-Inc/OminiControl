@@ -30,10 +30,11 @@ def prepare_params(
     return_dict: bool = True,
     joint_attention_kwargs: Optional[Dict[str, Any]] = None,
     callback_on_step_end: Optional[Callable[[int, int, Dict], None]] = None,
-    callback_on_step_end_tensor_inputs: List[str] = ["latents"],
+    callback_on_step_end_tensor_inputs: Optional[List[str]] = None,
     max_sequence_length: int = 512,
     **kwargs: dict,
 ):
+    callback_on_step_end_tensor_inputs = ["latents"] if callback_on_step_end_tensor_inputs is None else callback_on_step_end_tensor_inputs
     return (
         prompt,
         prompt_2,
@@ -66,10 +67,11 @@ def seed_everything(seed: int = 42):
 def generate(
     pipeline: FluxPipeline,
     conditions: List[Condition] = None,
-    model_config: Optional[Dict[str, Any]] = {},
+    model_config: Optional[Dict[str, Any]] = None,
     condition_scale: float = 1.0,
     **params: dict,
 ):
+    model_config = {} if model_config is None else model_config
     # model_config = model_config or get_config(config_path).get("model", {})
     if condition_scale != 1:
         for name, module in pipeline.transformer.named_modules():

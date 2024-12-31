@@ -12,8 +12,9 @@ def attn_forward(
     attention_mask: Optional[torch.FloatTensor] = None,
     image_rotary_emb: Optional[torch.Tensor] = None,
     cond_rotary_emb: Optional[torch.Tensor] = None,
-    model_config: Optional[Dict[str, Any]] = {},
+    model_config: Optional[Dict[str, Any]] = None,
 ) -> torch.FloatTensor:
+    model_config = {} if model_config is None else model_config
     batch_size, _, _ = (
         hidden_states.shape
         if encoder_hidden_states is None
@@ -179,8 +180,9 @@ def block_forward(
     cond_temb: torch.FloatTensor,
     cond_rotary_emb=None,
     image_rotary_emb=None,
-    model_config: Optional[Dict[str, Any]] = {},
+    model_config: Optional[Dict[str, Any]] = None,
 ):
+    model_config = {} if model_config is None else model_config
     use_cond = condition_latents is not None
     with enable_lora((self.norm1.linear,), model_config.get("latent_lora", False)):
         norm_hidden_states, gate_msa, shift_mlp, scale_mlp, gate_mlp = self.norm1(
@@ -280,8 +282,9 @@ def single_block_forward(
     condition_latents: torch.FloatTensor = None,
     cond_temb: torch.FloatTensor = None,
     cond_rotary_emb=None,
-    model_config: Optional[Dict[str, Any]] = {},
+    model_config: Optional[Dict[str, Any]] = None,
 ):
+    model_config = {} if model_config is None else model_config
 
     using_cond = condition_latents is not None
     residual = hidden_states
