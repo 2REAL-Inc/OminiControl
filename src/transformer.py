@@ -49,11 +49,12 @@ def tranformer_forward(
     condition_latents: torch.Tensor,
     condition_ids: torch.Tensor,
     condition_type_ids: torch.Tensor,
-    model_config: Optional[Dict[str, Any]] = {},
+    model_config: Optional[Dict[str, Any]] = None,
     return_conditional_latents: bool = False,
     c_t=0,
     **params: dict,
 ):
+    model_config = {} if model_config is None else model_config
     self = transformer
     use_condition = condition_latents is not None
     use_condition_in_single_blocks = model_config.get(
